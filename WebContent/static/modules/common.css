@@ -1,0 +1,63 @@
+body {
+	background-color: white;
+}
+.main-container {
+	margin: 0 10px;
+	overflow: hidden;
+}
+
+/* 弹框modal仿照jquery-ui相关样式 */
+.modal-footer {
+	padding: 10px;
+	padding-left: 15px;
+}
+.modal-header {
+	background: #EFEFEF;
+	color: #669fc7;
+	padding: 4px;
+	padding-left: 15px;
+}
+.modal-header button span {
+	color: red;
+}
+.modal-content {
+	padding: 4px;
+}
+/* 宽度控制 */
+.w-400{
+	width: 400px;
+}
+.w-300{
+	width: 300px;
+}
+.w-250{
+	width: 250px;
+}
+.w-200{
+	width: 200px;
+}
+.w-30{
+	width: 30px;
+}
+.w-50{
+	width: 50px;
+}
+.w-70{
+	width: 70px;
+}
+.w-90{
+	width: 90px;
+}
+.p-80{
+	width: 80%;
+}
+.p-60{
+	width: 60%;
+}
+
+th,td{
+	text-align: center;
+}
+table tbody{
+    font-size: 15px;
+}
