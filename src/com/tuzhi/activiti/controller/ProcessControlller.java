@@ -141,6 +141,7 @@ public class ProcessControlller extends BaseController {
 				Map<String, Object> variables = taskService.getVariables(task.getId());
 				map.put("applyPerson", variables.get("applyPerson").toString());
 				map.put("type", variables.get("type").toString());// 根据不同类型加载不同表单
+				map.put("user", userMapper.findUsernameById(variables.get("user").toString()));
 				map.put("applyTypeName", deployment.getName());
 				map.put("taskId", task.getId());
 				myTasks.add(map);
@@ -174,6 +175,7 @@ public class ProcessControlller extends BaseController {
 				Map<String, Object> variables = taskService.getVariables(task.getId());
 				map.put("applyPerson", variables.get("applyPerson").toString());
 				map.put("type", variables.get("type").toString());// 根据不同类型加载不同表单
+				map.put("user", userMapper.findUsernameById(variables.get("user").toString()));
 				map.put("applyTypeName", deployment.getName());
 				map.put("taskId", task.getId());
 				myTasks.add(map);
@@ -256,29 +258,43 @@ public class ProcessControlller extends BaseController {
 		}
 		return "已通过";
 	}
+	// 驳回,没整
+	/*@RequestMapping("refuse")
+	@ResponseBody
+	public String refuse(String taskId,String comment) {
+		String userId = taskService.getVariable(taskId, "user").toString();
+		taskService.delegateTask(taskId, userId);
+		return "已驳回";
+	}*/
 
 	// 获取表单form的数据
 	@RequestMapping("formMsg")
 	@ResponseBody
-	public Object getFormMsg(String taskId) {
-		Object object = taskService.getVariables(taskId).get("form");
-		// Object 因为不同申请不同的书体类,只能使用Object
-		return object;
+	public Object getFormMsg(String taskId,String processInstanceId) {
+		if(taskId!=null&&taskId!="")
+			return taskService.getVariables(taskId).get("form");
+		else {
+			HistoricVariableInstance variableInstance = historyService.createHistoricVariableInstanceQuery()
+			.processInstanceId(processInstanceId).variableName("form").singleResult();
+			return variableInstance.getValue();
+		}
 	}
 
 	// 获取流程历史执行记录
 	@RequestMapping("history")
 	@ResponseBody
-	public List<Map<String, Object>> getHistory(String taskId) {
+	public List<Map<String, Object>> getHistory(String taskId,String processInstanceId) {
+		
 		List<Map<String, Object>> maps = new LinkedList<>();
 		Map<String, Object> map;
 
-		String executionId = taskService.createTaskQuery().taskId(taskId).singleResult().getExecutionId();
+		if(taskId!=null&&taskId!="")
+			processInstanceId = taskService.createTaskQuery().taskId(taskId).singleResult().getProcessInstanceId();
 
 		List<HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery()
-				.executionId(executionId).finished().orderByTaskCreateTime().asc().list();
+				.processInstanceId(processInstanceId).finished().orderByTaskCreateTime().asc().list();
 		List<HistoricVariableInstance> vas = historyService.createHistoricVariableInstanceQuery()
-				.executionId(executionId).list();
+				.processInstanceId(processInstanceId).list();
 		for (HistoricTaskInstance historicTaskInstance : list) {
 			map = new HashMap<>();
 			map.put("assignee", historicTaskInstance.getAssignee());
@@ -302,4 +318,45 @@ public class ProcessControlller extends BaseController {
 		return maps;
 	}
 
+	//获取我的申请
+	@RequestMapping("getMyApply")
+	@ResponseBody
+	public List<Map<String, Object>> getMyApply(){
+		String userId = getUserId();
+		List<Map<String, Object>> maps = new LinkedList<>();
+		Map<String, Object> map = null;
+		List<HistoricVariableInstance> list = historyService.createHistoricVariableInstanceQuery()
+		.variableValueEquals(PropertiesUtil.getValue("currentUserMapKey"),userId).list();
+		for (HistoricVariableInstance historicVariableInstance : list) {
+			String processInstanceId = historicVariableInstance.getProcessInstanceId();//获取流程实例id
+			//显示需要保存的参数
+			//流程实例id
+			map = new HashMap<>();
+			map.put("processInstanceId", processInstanceId);
+			//根据实例id获取所需要参数
+			List<HistoricVariableInstance> variables = 
+					historyService.createHistoricVariableInstanceQuery().processInstanceId(processInstanceId).list();
+			//申请人applyPerson ,类型type ,  
+			for (HistoricVariableInstance variable : variables) {
+				if("type".equals(variable.getVariableName())||"applyPerson".equals(variable.getVariableName()))
+					map.put(variable.getVariableName(), variable.getValue());
+			}
+			//处理状态,,已完成  ,, 流程中,,根据实例id获取任务,,,有任务说明流程中,,没有任务说明已经处理完成
+			Task task = taskService.createTaskQuery().processInstanceId(processInstanceId).singleResult();
+			if(task==null)
+				map.put("status", "已结束");
+			else
+				map.put("status", "流程中("+userMapper.findUsernameById(task.getAssignee())+")");
+			//根据实例id获取,
+			String deploymentId = historyService.createHistoricProcessInstanceQuery().
+					processInstanceId(processInstanceId).singleResult().getDeploymentId();
+			String deployName = repositoryService.createDeploymentQuery()
+					.deploymentId(deploymentId).singleResult().getName();
+			map.put("deployName", deployName);
+			maps.add(map);
+		}
+		return maps;
+	}
+	
+	
 }

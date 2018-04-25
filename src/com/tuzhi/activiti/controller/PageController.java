@@ -18,10 +18,14 @@ public class PageController {
 	public String page(@PathVariable("module") String module){
 		return module; 
 	}
-	@RequestMapping("page/{module}/{param}")
-	public String page(@PathVariable("module") String module,@PathVariable("param") String param
+	@RequestMapping("page/{module}/{temp}/{param}")
+	public String page(@PathVariable("module") String module
+			,@PathVariable("param") String param,@PathVariable("temp") String temp
 			,Model model){
-		model.addAttribute("taskId", param);
+		if("1".equals(temp))
+			model.addAttribute("taskId", param);
+		else
+			model.addAttribute("processInstanceId", param);
 		return module; 
 	}
 }

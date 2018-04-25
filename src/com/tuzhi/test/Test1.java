@@ -6,9 +6,11 @@ package com.tuzhi.test;
  */
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.RepositoryService;
@@ -16,6 +18,7 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
+import org.activiti.engine.history.HistoricVariableInstanceQuery;
 import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
@@ -26,7 +29,10 @@ import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentQuery;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
+import org.activiti.engine.task.TaskQuery;
 import org.junit.Test;
+
+import com.tuzhi.activiti.util.PropertiesUtil;
 
 public class Test1 {
 
@@ -34,6 +40,7 @@ public class Test1 {
 	private TaskService taskService = engine.getTaskService();
 	private RuntimeService runtimeService = engine.getRuntimeService();
 	private RepositoryService repositoryService = engine.getRepositoryService();
+	private HistoryService historyService= engine.getHistoryService();
 
 	@Test // 部署流程
 	public void deploy() {
@@ -103,9 +110,10 @@ public class Test1 {
 		Map<String, Object> map2 = new HashMap<>();
 		map.put("manage", "2");
 		map2.put("remarks", "我是总经理,,我同意了!");
-		String taskId = "10003";
-		taskService.setVariablesLocal(taskId,map2);
-		taskService.complete(taskId,map);
+		String taskId = "15053";
+		taskService.setAssignee("15053","2");
+		//taskService.setVariablesLocal(taskId,map2);
+		//taskService.complete(taskId);
 		System.err.println("任务 " + taskId + " 已完成");
 	}
 
@@ -182,10 +190,45 @@ public class Test1 {
 		}
 	}
 	
-	//得到流程的历史处理人和评论
+	// 得到我的申请
 	@Test
-	public void getHistoryComment(){
+	public void getMyHistory(){
+		List<Map<String, Object>> maps = new LinkedList<>();
+		Map<String, Object> map = null;
+		String userId = "2";
+		List<HistoricVariableInstance> list = historyService.createHistoricVariableInstanceQuery()
+		.variableValueEquals(PropertiesUtil.getValue("currentUserMapKey"),userId).list();
+		for (HistoricVariableInstance historicVariableInstance : list) {
+			String processInstanceId = historicVariableInstance.getProcessInstanceId();//获取流程实例id
+			//显示需要保存的参数
+			//流程实例id
+			map = new HashMap<>();
+			map.put("processInstanceId", processInstanceId);
+			//根据实例id获取所需要参数
+			List<HistoricVariableInstance> variables = 
+					historyService.createHistoricVariableInstanceQuery().processInstanceId(processInstanceId).list();
+			//申请人applyPerson ,类型type ,  
+			for (HistoricVariableInstance variable : variables) {
+				if("type".equals(variable.getVariableName())||"applyPerson".equals(variable.getVariableName()))
+					map.put(variable.getVariableName(), variable.getValue());
+			}
+			//处理状态,,已完成  ,, 流程中,,根据实例id获取任务,,,有任务说明流程中,,没有任务说明已经处理完成
+			Task task = taskService.createTaskQuery().processInstanceId(processInstanceId).singleResult();
+			if(task==null)
+				map.put("status", "已结束");
+			else
+				map.put("status", "流程中("+task.getAssignee()+")");
+			//根据实例id获取,
+			String deploymentId = historyService.createHistoricProcessInstanceQuery().
+					processInstanceId(processInstanceId).singleResult().getDeploymentId();
+			String deployName = repositoryService.createDeploymentQuery()
+					.deploymentId(deploymentId).singleResult().getName();
+			map.put("deployName", deployName);
+			maps.add(map);
+		}
+		
+		for (Map<String,Object> map2 : maps) {
+			System.err.println(map2);
+		}
 	}
-	
-
 }

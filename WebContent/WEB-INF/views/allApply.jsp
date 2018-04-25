@@ -17,6 +17,7 @@
 	text-align: center;
 }
 </style>
+<jsp:include page="common/viewFlowModal.jsp"></jsp:include>
 </head>
 <body>
 	<div class="container">
@@ -26,6 +27,7 @@
 			<thead>
 				<tr>
 					<th>序号</th>
+					<th>提交人</th>
 					<th>申请人</th>
 					<th>申请类型</th>
 					<th>操作</th>

@@ -23,6 +23,8 @@ public class PropertiesUtil {
 			FileInputStream fis = new FileInputStream(PropertiesUtil.class.getResource("/").getFile()+"config.properties");// 属性文件输入流     
 			// 将属性文件流装载到Properties对象中
 			prop.load(fis);
+			//InputStream in = PropertiesUtil.class.getClassLoader().getResourceAsStream("config.properties");// 属性文件输入流     
+			//prop.load(in);
 			fis.close();// 关闭流  
 			return prop.getProperty(key);
 		} catch (IOException e) {
@@ -51,6 +53,6 @@ public class PropertiesUtil {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(getValue("tables"));
+		System.out.println(getValue("currentUserMapKey"));
 	}
 }

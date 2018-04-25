@@ -9,14 +9,15 @@
 <link
 	href="https://cdn.bootcss.com/bootstrap/4.1.0/css/bootstrap.min.css"
 	rel="stylesheet">
+<jsp:include page="common/viewFlowModal.jsp"></jsp:include>
 </head>
 <body>
 	<div style="font-size: 30px; color: cornflowerblue; text-align: center; padding-top: 20px;">采购申请
 		<a href="${contextPath }/processDefineImage.html?processKey=buyKey" target="_blank"
-		style="font-size: 10px;color: red;">查看流程图</a></div>
+		style="font-size: 10px;color: red;" id="a_view">查看流程图</a></div>
 	
 	<div style="margin-top: 100px;margin-left: 100px;">
-		<form class="form-horizontal" action="${contextPath}/process/startBuyProcess.html" method="post">
+		<form style="margin-left: 25%;" class="form-horizontal" action="${contextPath}/process/startBuyProcess.html" method="post">
 			<div class="form-group">
 				<label class="col-sm-2 control-label">申请人</label>
 				<div class="col-sm-6">

@@ -43,4 +43,7 @@ public interface IUserMapper extends Mapper<User> {
 	List<User> getUsers();
     
 	List<Map<String, Object>> getNextRoles(String[] arr);
+	
+	@Select("select username from t_user where id = #{lwd}")
+	String findUsernameById(String id);
 }

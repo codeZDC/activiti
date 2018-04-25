@@ -14,6 +14,7 @@
 	<!-- 请假流程申请流程相关记录页面(审批查看) -->
 	<!-- jsp名称格式为 :  流程类型+View.jsp -->
 	<input type="hidden" id="taskId" value="${taskId }"> 
+	<input type="hidden" id="processInstanceId" value="${processInstanceId }"> 
 	<div style="margin-left: 100px;">
 		<form class="form-horizontal">
 			<div class="form-group">

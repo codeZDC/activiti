@@ -53,7 +53,7 @@ public class ProcessImageController {
 	 * 读取带跟踪的图片
 	 */
 	@RequestMapping(value = "/processImage")
-	public void test(HttpServletResponse response,String taskId) throws Exception {
+	public void test(HttpServletResponse response,String taskId,String processInstanceId) throws Exception {
 		// 部署流程，只要是符合BPMN2规范的XML文件，理论上都可以被ACTIVITI部署
 		//repositoryService.createDeployment().addClasspathResource("com/pzr/demo/diagrams/MyProcess.bpmn").deploy();
 		// 开启流程，myprocess是流程的ID
@@ -72,8 +72,10 @@ public class ProcessImageController {
 		//System.out.println("执行【二次审批】环节，流程推动到【结束】环节");
 
 		// processInstanceId
-		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-		String processInstanceId = task.getProcessInstanceId();
+		if(processInstanceId==null||processInstanceId==""){
+			Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+			processInstanceId = task.getProcessInstanceId();
+		}
 		// 获取历史流程实例
 		HistoricProcessInstance processInstance = historyService.createHistoricProcessInstanceQuery()
 				.processInstanceId(processInstanceId).singleResult();

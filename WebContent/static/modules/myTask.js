@@ -9,12 +9,14 @@ function getMyTask(){
 		$.each(res,function(ind){
 			var index =$('<td>').text( ind + 1);
 			var applyPerson =$('<td>').text(this.applyPerson);
+			var user =$('<td>').text(this.user);
 			var applyTypeName =$('<td>').text(this.applyTypeName);
 			var handler = $('<td>').append($('<a href="javascript:;" class="accept_btn">通过</a>\
 					&nbsp;&nbsp;<a href="javascript:void(0);"  class="view_btn">查看详情</a>\
 					&nbsp;&nbsp;<a href="javascript:void(0);"  class="viewImage_btn">查看流程图</a>'));
 			$('<tr>').attr('taskId',this.taskId).attr('type',this.type)
-			.append(index).append(applyPerson).append(applyTypeName).append(handler).appendTo(container);
+			.append(index).append(user).append(applyPerson)
+			.append(applyTypeName).append(handler).appendTo(container);
 		});
 	});
 }
@@ -59,10 +61,13 @@ $(document).on('click','.view_btn',function(){
 	var type = $(this).parents('tr').attr('type');
 	var taskId = $(this).parents('tr').attr('taskId');
 	$('#view_modal').modal();
-	$('#view_modal iframe').attr('src',contextPath+'page/'+type+'View/'+taskId+'.html');
+	$('#view_modal iframe').attr('src',contextPath+'page/'+type+'View/1/'+taskId+'.html');
 });
 //查看流程图
 $(document).on('click','.viewImage_btn',function(){
 	var taskId = $(this).parents('tr').attr('taskId');
-	location = contextPath + "processImage.html?taskId="+taskId;
+	//location = contextPath + "processImage.html?temp=1&taskId="+taskId;
+	$('#viewFlowImage_modal iframe')
+	.attr('src',contextPath + "processImage.html?temp=1&taskId="+taskId);
+	$('#viewFlowImage_modal').modal();
 });

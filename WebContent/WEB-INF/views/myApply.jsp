@@ -20,16 +20,17 @@
 <jsp:include page="common/viewFlowModal.jsp"></jsp:include>
 </head>
 <body>
+	<!-- 我的申请 -->
 	<div class="container">
 		<div
-			style="font-size: 30px; color: cornflowerblue; text-align: center; padding-top: 20px;">我的待处理文件</div>
+			style="font-size: 30px; color: cornflowerblue; text-align: center; padding-top: 20px;">我的申请</div>
 		<table class="table table-bordered" id="tasks_table">
 			<thead>
 				<tr>
 					<th>序号</th>
-					<th>提交人</th>
 					<th>申请人</th>
 					<th>申请类型</th>
+					<th>申请状态</th>
 					<th>操作</th>
 				</tr>
 			</thead>
@@ -74,5 +75,5 @@
 <script
 	src="https://cdn.bootcss.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 <script src="${contextPath }/static/modules/common.js"></script>
-<script src="${contextPath }/static/modules/myTask.js"></script>
+<script src="${contextPath }/static/modules/myApply.js"></script>
 </html>

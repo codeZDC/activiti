@@ -1,4 +1,5 @@
 var taskId = $('#taskId').val();
+var processInstanceId = $('#processInstanceId').val();
 //根据taskId 获取下一个处理人的信息(一个或多个)
 //根据taskId获取表单信息
 
@@ -8,7 +9,7 @@ getHistory();
 
 	
 function getFormMsg(){
-	$.getJSON(contextPath+'process/formMsg.html',{taskId:taskId},function(res){
+	$.getJSON(contextPath+'process/formMsg.html',{taskId:taskId,processInstanceId:processInstanceId},function(res){
 		//返回的就是表单数据
 		for ( var key in res) {
 			$(':input[name='+key+']').val(res[key]).attr('readonly','readonly');
@@ -16,7 +17,7 @@ function getFormMsg(){
 	})
 }
 function getHistory(){
-	$.getJSON(contextPath+'process/history.html',{taskId:taskId},function(res){
+	$.getJSON(contextPath+'process/history.html',{taskId:taskId,processInstanceId:processInstanceId},function(res){
 		console.log(res);
 		//historyTable
 		var container = $('#historyTable tbody').empty();

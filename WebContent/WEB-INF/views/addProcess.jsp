@@ -15,7 +15,7 @@
 	<div
 		style="font-size: 30px; color: cornflowerblue; text-align: center; padding-top: 20px;">添加流程</div>
 	<div style="margin-top: 100px;margin-left: 100px;">
-		<form class="form-horizontal" enctype="multipart/form-data" method="post">
+		<form style="margin-left: 25%;" class="form-horizontal" enctype="multipart/form-data" method="post">
 			<div class="form-group">
 				<label class="col-sm-2 control-label">流程名称</label>
 				<div class="col-sm-6">
