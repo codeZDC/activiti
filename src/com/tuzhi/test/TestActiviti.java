@@ -20,7 +20,7 @@ import org.junit.Test;
 public class TestActiviti {
 	private ProcessEngine processEngine=ProcessEngines.getDefaultProcessEngine();
 	//取得流程引擎，且自动创建Activiti涉及的数据库和表
-	@Test
+	//@Test
 	public void createProcessEngine(){
 		/**1.通过代码形式创建
 		 *  - 取得ProcessEngineConfiguration对象
@@ -64,7 +64,7 @@ public class TestActiviti {
 	}
 	
 	//部署流程定义
-	@Test
+	//@Test
 	public void deploy(){
 		//取得流程引擎对象
 //		ProcessEngine processEngine=ProcessEngines.getDefaultProcessEngine();
@@ -82,7 +82,7 @@ public class TestActiviti {
 		
 	}
 	//执行流程
-	@Test
+	//@Test
 	public void startProcess(){
 		String processDefiKey="leaveBill";
 		//取运行时服务
@@ -93,7 +93,7 @@ public class TestActiviti {
 		System.out.println("流程定义id:"+pi.getProcessDefinitionId());//输出流程定义的id
 	}
 	//查询任务 
-	@Test
+	//@Test
 	public void queryTask(){
 		//任务的办理人
 		String assignee="王五";
@@ -118,7 +118,7 @@ public class TestActiviti {
 	}
 	
 	//完成任务
-	@Test
+	//@Test
 	public void compileTask(){
 		String taskId="402";
 		//taskId：任务id

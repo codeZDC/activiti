@@ -18,7 +18,6 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
-import org.activiti.engine.history.HistoricVariableInstanceQuery;
 import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
@@ -26,13 +25,12 @@ import org.activiti.engine.impl.pvm.PvmActivity;
 import org.activiti.engine.impl.pvm.PvmTransition;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.repository.Deployment;
-import org.activiti.engine.repository.DeploymentQuery;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
-import org.activiti.engine.task.TaskQuery;
 import org.junit.Test;
 
 import com.tuzhi.activiti.util.PropertiesUtil;
+
 
 public class Test1 {
 
@@ -42,7 +40,7 @@ public class Test1 {
 	private RepositoryService repositoryService = engine.getRepositoryService();
 	private HistoryService historyService= engine.getHistoryService();
 
-	@Test // 部署流程
+	//@Test // 部署流程
 	public void deploy() {
 		Deployment deploy = repositoryService.createDeployment().name("文件申请流程").category("办公类别")
 				.addClasspathResource("flow/buy.bpmn")
@@ -51,7 +49,7 @@ public class Test1 {
 		System.out.println("部署名称 : " + deploy.getName());
 	}
 
-	@Test // 开始流程
+	//@Test // 开始流程
 	public void startProcess() {
 		String personId = "525";
 		String pkey = "applyId";
@@ -65,7 +63,7 @@ public class Test1 {
 	}
 
 	
-	@Test // 获取任务
+	//@Test // 获取任务
 	public void getTask() {
 		String roleId = "3";
 		List<Task> list = taskService.createTaskQuery().taskAssignee(roleId).list();
@@ -86,7 +84,7 @@ public class Test1 {
 		}
 	}
 	
-	@Test // 获取所有正在执行任务
+	//@Test // 获取所有正在执行任务
 	public void getAllTask() {
 		List<Task> list = taskService.createTaskQuery().list();
 		if (list != null && list.size() > 0) {
@@ -104,7 +102,7 @@ public class Test1 {
 		}
 	}
 
-	@Test
+	//@Test
 	public void completeTask() {
 		Map<String, Object> map = new HashMap<>();
 		Map<String, Object> map2 = new HashMap<>();
@@ -117,7 +115,7 @@ public class Test1 {
 		System.err.println("任务 " + taskId + " 已完成");
 	}
 
-	@Test
+	//@Test
 	public void test() {
 		//String roleId = "1";
 		Task task = taskService.createTaskQuery().taskId("27507").singleResult();
@@ -157,7 +155,7 @@ public class Test1 {
 	}
 	
 	//获取历史完成流程
-	@Test
+	//@Test
 	public void getHistory(){
 		List<HistoricTaskInstance> list = engine.getHistoryService().createHistoricTaskInstanceQuery()
 		.executionId("20001").finished().list();
@@ -179,7 +177,7 @@ public class Test1 {
 		}
 	}
 	//获取历史完成流程
-	@Test
+	//@Test
 	public void getHistoryVariable(){
 		List<HistoricVariableInstance> list = engine.getHistoryService().createHistoricVariableInstanceQuery()
 				.executionId("20001").taskId("25003").list();
@@ -191,7 +189,7 @@ public class Test1 {
 	}
 	
 	// 得到我的申请
-	@Test
+	//@Test
 	public void getMyHistory(){
 		List<Map<String, Object>> maps = new LinkedList<>();
 		Map<String, Object> map = null;
