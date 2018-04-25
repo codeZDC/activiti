@@ -1,1 +1,4 @@
 # activiti
+
+使用工作流activiti 做了一个简单的审批系统
+业务也比较简单,eclipse安装activiti插件即可制作简单流程图
